@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 #include <math.h>
 #include <wrl.h>
 
@@ -21,6 +22,7 @@ typedef double   f64;
 #define RIGHT { -1.0f, 0.0f, 0.0f }
 #define UP { 0.0f, 1.0f, 0.0f }
 
+using namespace std;
 using namespace Microsoft::WRL;
 
 #define SAFE_DELETE(x)				{ if(x){ delete x; x = nullptr; } }
@@ -32,6 +34,9 @@ union vec2 {
 	struct { f32 x, y; };
 	struct { f32 u, v; };
 
+	vec2() {};
+	vec2(f32 x, f32 y) : x(x), y(y) {};
+
 	vec2 operator+(vec2 b) { vec2 result = { x + b.x, y + b.y }; return result; };
 	vec2 operator-(vec2 b) { vec2 result = { x - b.x, y - b.y }; return result; };
 	vec2 operator*(vec2 b) { vec2 result = { x * b.x, y * b.y }; return result; };
@@ -41,6 +46,8 @@ union vec2 {
 union vec3 {
 	struct { f32 x, y, z; };
 	struct { f32 r, g, b; };
+
+	vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {};
 
 	vec3 operator+(vec3 b) { vec3 result = { x + b.x, y + b.y, z + b.z }; return result; };
 	vec3 operator-(vec3 b) { vec3 result = { x - b.x, y - b.y, z - b.z }; return result; };
@@ -55,6 +62,23 @@ union vec4 {
 	struct { f32 x, y, z, w; };
 	struct { f32 r, g, b, a; };
 	struct { vec3 xyz; };
+	
+	vec4() {};
+	vec4(f32 x, f32 y, f32 z, f32 w) : x(x), y(y), z(z), w() {};
+
+	float& operator[] (int index) {
+		if (index < 0 || index > 3) return x;
+		else if (index == 0) return x;
+		else if (index == 1) return y;
+		else if (index == 2) return z;
+		else if (index == 3) return w;
+	}
+};
+
+struct quat {
+	f32 x; f32 y; f32 z; f32 w;
+
+	quat(f32 x, f32 y, f32 z, f32 w) : x(x), y(y), z(z), w() {};
 };
 
 struct mat4x4 {
@@ -160,15 +184,16 @@ mat4x4 matrix_identity(_Outptr_ mat4x4 *mat) {
 	return *mat;
 }
 
-mat4x4 matrix_transpose(mat4x4 *mat) {
+mat4x4* matrix_transpose(_Outptr_ mat4x4* result, mat4x4* source) {
 	mat4x4 transpose = {
-		mat->_11, mat->_21, mat->_31, mat->_41
-		, mat->_12, mat->_22, mat->_32, mat->_42
-		, mat->_13, mat->_23, mat->_33, mat->_43
-		, mat->_14, mat->_24, mat->_34, mat->_44
+		source->_11, source->_21, source->_31, source->_41
+		, source->_12, source->_22, source->_32, source->_42
+		, source->_13, source->_23, source->_33, source->_43
+		, source->_14, source->_24, source->_34, source->_44
 	};
+	*result = transpose;
 
-	return transpose;
+	return result;
 }
 
 mat4x4 matrix_rotation_x(_Outptr_ mat4x4* mat, f32 radian) {

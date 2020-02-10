@@ -1,9 +1,16 @@
+#define NOMINMAX
+
 #include "graphics.cpp"
 #include "platform.cpp"
 #include "input.cpp"
 
 #include "Device/directX.cpp"
-#include "Device/win_app.cpp"
+#include "assimp/loader.cpp"
+
+#include "Utility/BinaryFile.cpp"
+#include "Utility/Path.cpp"
+#include "Utility/String.cpp"
+#include "Utility/Xml.cpp"
 
 #define DEBUG
 
@@ -143,7 +150,12 @@ int main(int, char**)
 		Input input;
 		Graphics graphics;
 		DirectX directX;
-
+		Assimp_Loader* kachujin_loader = new Assimp_Loader(
+			L"_asset/fbx_model/Kachujin/Kachujin.fbx"
+			, L"_model/Kachujin/"
+			, L"Kachujin");
+		kachujin_loader->export_material();
+		kachujin_loader->export_mesh();
 
 		init(&sdl2);
 		init(&input);
@@ -152,6 +164,7 @@ int main(int, char**)
 		
 		main_loop_2(&directX, &input);
 
+		kachujin_loader->destroy();
 		cleanup(&input);
 		cleanup(&sdl2);
 		cleanup(&graphics);
