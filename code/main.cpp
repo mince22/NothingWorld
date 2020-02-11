@@ -4,13 +4,20 @@
 #include "platform.cpp"
 #include "input.cpp"
 
-#include "Device/directX.cpp"
 #include "assimp/loader.cpp"
+
+#include "Device/d3d.cpp"
+
+#include "Model/model.cpp"
+#include "Model/model_bone.cpp"
+#include "Model/model_material.cpp"
+
 
 #include "Utility/BinaryFile.cpp"
 #include "Utility/Path.cpp"
 #include "Utility/String.cpp"
 #include "Utility/Xml.cpp"
+#include "Utility/WICTextureLoader.cpp"
 
 #define DEBUG
 
@@ -78,41 +85,41 @@ void process_pending_events(Input *input) {
 		}
 	}
 }
+//
+//void main_loop(Graphics* graphics, Input *input) {
+//	D3D11 &d3d11 = graphics->d3d11;
+//
+//	float color[4] = { 0.5f, 0.5f, 0.1f, 1.0f };
+//	d3d11.context->ClearRenderTargetView(d3d11.render_target_view, color);
+//	d3d11.context->ClearDepthStencilView(d3d11.depth_stencil_view, D3D11_CLEAR_DEPTH, 1, 0);
+//	while (!should_quit) {
+//		/*
+//		this will used later for loop timing code:
+//
+//		static u64 prev_count = SDL_GetPerformanceCounter();
+//		static u64 curr_count = SDL_GetPerformanceCounter();
+//		static u64 frequency = SDL_GetPerformanceFrequency();
+//		prev_count = curr_count;
+//		curr_count = SDL_GetPerformanceCounter();
+//		f64 elapsed_time = (f64)(curr_count - prev_count) / (f64)frequency;
+//		*/
+//
+//		{
+//#ifdef DEBUG
+//			TIMED_BLOCK("Event & Input Precessing");
+//#endif
+//			zero_struct(input);
+//			process_pending_events(input);
+//		}
+//
+//		d3d11.context->ClearRenderTargetView(d3d11.render_target_view, color);
+//		d3d11.context->ClearDepthStencilView(d3d11.depth_stencil_view, D3D11_CLEAR_DEPTH, 1, 0);
+//
+//		d3d11.swap_chain->Present(1, 0);
+//	}
+//}
 
-void main_loop(Graphics* graphics, Input *input) {
-	D3D11 &d3d11 = graphics->d3d11;
-
-	float color[4] = { 0.5f, 0.5f, 0.1f, 1.0f };
-	d3d11.context->ClearRenderTargetView(d3d11.render_target_view, color);
-	d3d11.context->ClearDepthStencilView(d3d11.depth_stencil_view, D3D11_CLEAR_DEPTH, 1, 0);
-	while (!should_quit) {
-		/*
-		this will used later for loop timing code:
-
-		static u64 prev_count = SDL_GetPerformanceCounter();
-		static u64 curr_count = SDL_GetPerformanceCounter();
-		static u64 frequency = SDL_GetPerformanceFrequency();
-		prev_count = curr_count;
-		curr_count = SDL_GetPerformanceCounter();
-		f64 elapsed_time = (f64)(curr_count - prev_count) / (f64)frequency;
-		*/
-
-		{
-#ifdef DEBUG
-			TIMED_BLOCK("Event & Input Precessing");
-#endif
-			zero_struct(input);
-			process_pending_events(input);
-		}
-
-		d3d11.context->ClearRenderTargetView(d3d11.render_target_view, color);
-		d3d11.context->ClearDepthStencilView(d3d11.depth_stencil_view, D3D11_CLEAR_DEPTH, 1, 0);
-
-		d3d11.swap_chain->Present(1, 0);
-	}
-}
-
-void main_loop_2(DirectX* directX, Input *input) {
+void main_loop_2(D3D* directX, Input *input) {
 	float color[4] = { 0.5f, 0.5f, 0.1f, 1.0f };
 	directX->get_context()->ClearRenderTargetView(directX->get_back_buffer_rtv(), color);
 	//directX->context->ClearDepthStencilView(d3d11.depth_stencil_view, D3D11_CLEAR_DEPTH, 1, 0);
@@ -149,18 +156,23 @@ int main(int, char**)
 		SDL2 sdl2;
 		Input input;
 		Graphics graphics;
-		DirectX directX;
-		Assimp_Loader* kachujin_loader = new Assimp_Loader(
-			L"_asset/fbx_model/Kachujin/Kachujin.fbx"
-			, L"_model/Kachujin/"
-			, L"Kachujin");
-		kachujin_loader->export_material();
-		kachujin_loader->export_mesh();
+		D3D directX;
 
 		init(&sdl2);
 		init(&input);
 		init(&graphics);
 		directX.init();
+
+		Assimp_Loader* kachujin_loader = new Assimp_Loader(
+			L"_asset/fbx_model/Kachujin/Kachujin.fbx"
+			, L"_model/Kachujin/"
+			, L"Kachujin");
+		//kachujin_loader->export_material();
+		kachujin_loader->export_mesh();
+
+		Model* kachujin = new Model(&directX);
+		kachujin->read_mesh_file(L"_model/Kachujin/Kachujin.mesh");
+		kachujin->read_material_file(L"_model/Kachujin/Kachujin.material");
 		
 		main_loop_2(&directX, &input);
 

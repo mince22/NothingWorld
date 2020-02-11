@@ -52,8 +52,6 @@ struct Assimp_Mesh
 	string name;
 	int parent_bone;
 
-	aiMesh* mesh;
-
 	vector<Vertex_Texture_Normal_Tangent_Blend> vertices;
 	vector<u32> indices;
 

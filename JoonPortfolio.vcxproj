@@ -131,7 +131,7 @@
     <ClCompile Include="code\Assimp\loader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\Device\directX.cpp">
+    <ClCompile Include="code\Device\d3d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\graphics.cpp">
@@ -141,6 +141,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\main.cpp" />
+    <ClCompile Include="code\Model\model.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\Model\model_bone.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\Model\model_material.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="code\platform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -153,6 +162,9 @@
     <ClCompile Include="code\Utility\String.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="code\Utility\WICTextureLoader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="code\Utility\Xml.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -162,13 +174,18 @@
     <ClInclude Include="code\Assimp\loader.hpp" />
     <ClInclude Include="code\common.hpp" />
     <ClInclude Include="code\debug.hpp" />
-    <ClInclude Include="code\Device\directX.hpp" />
+    <ClInclude Include="code\Device\d3d.hpp" />
     <ClInclude Include="code\graphics.hpp" />
     <ClInclude Include="code\input.hpp" />
+    <ClInclude Include="code\Model\model.hpp" />
+    <ClInclude Include="code\Model\model_bone.hpp" />
+    <ClInclude Include="code\Model\model_material.hpp" />
+    <ClInclude Include="code\Model\model_type.hpp" />
     <ClInclude Include="code\platform.hpp" />
     <ClInclude Include="code\Utility\BinaryFile.h" />
     <ClInclude Include="code\Utility\Path.h" />
     <ClInclude Include="code\Utility\String.h" />
+    <ClInclude Include="code\Utility\WICTextureLoader.h" />
     <ClInclude Include="code\Utility\Xml.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

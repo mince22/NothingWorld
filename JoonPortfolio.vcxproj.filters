@@ -22,6 +22,12 @@
     <Filter Include="소스 파일\Utility">
       <UniqueIdentifier>{23ff785b-acaf-4254-9408-a676a4d537bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Render">
+      <UniqueIdentifier>{9be513ee-62af-4aeb-89bf-cb5c87391965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Model">
+      <UniqueIdentifier>{ec38e83f-f4de-4437-b25a-6cf1116a1de5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\graphics.cpp">
@@ -35,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="code\input.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Device\directX.cpp">
-      <Filter>소스 파일\Device</Filter>
     </ClCompile>
     <ClCompile Include="code\Assimp\loader.cpp">
       <Filter>소스 파일\Assimp</Filter>
@@ -53,6 +56,21 @@
     </ClCompile>
     <ClCompile Include="code\Utility\Xml.cpp">
       <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Utility\WICTextureLoader.cpp">
+      <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Model\model.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Model\model_bone.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Model\model_material.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Device\d3d.cpp">
+      <Filter>소스 파일\Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,9 +89,6 @@
     <ClInclude Include="code\debug.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="code\Device\directX.hpp">
-      <Filter>소스 파일\Device</Filter>
-    </ClInclude>
     <ClInclude Include="code\Assimp\assimp_type.hpp">
       <Filter>소스 파일\Assimp</Filter>
     </ClInclude>
@@ -91,6 +106,24 @@
     </ClInclude>
     <ClInclude Include="code\Utility\Xml.h">
       <Filter>소스 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Utility\WICTextureLoader.h">
+      <Filter>소스 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Model\model.hpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Model\model_bone.hpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Model\model_type.hpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Model\model_material.hpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Device\d3d.hpp">
+      <Filter>소스 파일\Device</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

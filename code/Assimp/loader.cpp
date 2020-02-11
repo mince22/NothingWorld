@@ -261,6 +261,7 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 			mesh->vertices.push_back(vertex);
 		}//end mNumVertices
 
+		//mNumFaces is the number of primitives.
 		for (int ii = 0; ii < mesh_data->mNumFaces; ii++)
 		{
 			aiFace& face = mesh_data->mFaces[ii];
@@ -320,7 +321,7 @@ void Assimp_Loader::write_mesh_data(wstring save_folder, wstring file_name)
 
 	BinaryWriter* writer = new BinaryWriter();
 	writer->Open(save_folder + file_name);
-
+	
 	writer->UInt(bones.size());
 	for (auto bone : bones)
 	{

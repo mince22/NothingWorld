@@ -1,6 +1,6 @@
 #pragma once
 
-#include "directX.hpp"
+#include "d3d.hpp"
 #include "../common.hpp"
 
 #include <assert.h>
@@ -8,13 +8,13 @@
 
 extern HWND hwnd;
 
-void DirectX::init()
+void D3D::init()
 {
 	create_device_and_swap_chain();
 	create_back_buffer_rtv();
 }
 
-void DirectX::create_device_and_swap_chain()
+void D3D::create_device_and_swap_chain()
 {
 	HRESULT result;
 	// Create Device
@@ -76,7 +76,7 @@ void DirectX::create_device_and_swap_chain()
 	}
 }
 
-void DirectX::create_back_buffer_rtv()
+void D3D::create_back_buffer_rtv()
 {
 	ComPtr<ID3D11Texture2D> buffer;
 
@@ -89,7 +89,7 @@ void DirectX::create_back_buffer_rtv()
 	assert(SUCCEEDED(result));
 }
 
-void DirectX::destroy()
+void D3D::destroy()
 {
 	SAFE_RELEASE(back_buffer_rtv);
 	SAFE_RELEASE(swap_chain);

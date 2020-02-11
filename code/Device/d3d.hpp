@@ -3,13 +3,13 @@
 #include <d3d11_1.h>
 #include <dxgi.h>
 
-class DirectX {
+class D3D {
 public:
-	DirectX() = default;
+	D3D() = default;
 	//Disallow copy contructor
-	DirectX(const DirectX&) = delete;
+	D3D(const D3D&) = delete;
 	//Disallow assign
-	DirectX& operator=(const DirectX&) = delete;
+	D3D& operator=(const D3D&) = delete;
 
 	void init();
 
@@ -19,6 +19,7 @@ public:
 
 	void destroy();
 
+	ID3D11Device1* get_device() const { return device; }
 	ID3D11RenderTargetView* get_back_buffer_rtv() const { return back_buffer_rtv; }
 	ID3D11DeviceContext1* get_context() const { return context; }
 	IDXGISwapChain1* get_swap_chain() const { return swap_chain; }
