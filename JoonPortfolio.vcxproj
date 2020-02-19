@@ -131,13 +131,13 @@
     <ClCompile Include="code\Assimp\loader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\Device\d3d.cpp">
+    <ClCompile Include="code\Component\Transform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\graphics.cpp">
+    <ClCompile Include="code\Execute\test_model.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\input.cpp">
+    <ClCompile Include="code\Execute\test_object.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\main.cpp" />
@@ -150,7 +150,25 @@
     <ClCompile Include="code\Model\model_material.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\platform.cpp">
+    <ClCompile Include="code\Object\object.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\Render\shader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\System\d3d.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\System\input.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\System\launcher.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\System\platform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\System\program.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\Utility\BinaryFile.cpp">
@@ -173,20 +191,32 @@
     <ClInclude Include="code\Assimp\assimp_type.hpp" />
     <ClInclude Include="code\Assimp\loader.hpp" />
     <ClInclude Include="code\common.hpp" />
+    <ClInclude Include="code\Component\Transform.hpp" />
     <ClInclude Include="code\debug.hpp" />
-    <ClInclude Include="code\Device\d3d.hpp" />
-    <ClInclude Include="code\graphics.hpp" />
-    <ClInclude Include="code\input.hpp" />
+    <ClInclude Include="code\Execute\test_model.h" />
+    <ClInclude Include="code\Execute\test_object.hpp" />
+    <ClInclude Include="code\Interface\i_component.hpp" />
+    <ClInclude Include="code\Interface\i_execute.hpp" />
     <ClInclude Include="code\Model\model.hpp" />
     <ClInclude Include="code\Model\model_bone.hpp" />
     <ClInclude Include="code\Model\model_material.hpp" />
     <ClInclude Include="code\Model\model_type.hpp" />
-    <ClInclude Include="code\platform.hpp" />
+    <ClInclude Include="code\Object\object.hpp" />
+    <ClInclude Include="code\Object\object_id.hpp" />
+    <ClInclude Include="code\Render\constant_buffer.hpp" />
+    <ClInclude Include="code\Render\rasterizer_state.hpp" />
+    <ClInclude Include="code\Render\sampler_state.hpp" />
+    <ClInclude Include="code\Render\shader.hpp" />
+    <ClInclude Include="code\System\d3d.hpp" />
+    <ClInclude Include="code\System\input.hpp" />
+    <ClInclude Include="code\System\platform.hpp" />
+    <ClInclude Include="code\System\program.hpp" />
     <ClInclude Include="code\Utility\BinaryFile.h" />
     <ClInclude Include="code\Utility\Path.h" />
     <ClInclude Include="code\Utility\String.h" />
     <ClInclude Include="code\Utility\WICTextureLoader.h" />
     <ClInclude Include="code\Utility\Xml.h" />
+    <ClInclude Include="code\vertex_layout.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

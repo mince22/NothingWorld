@@ -1,7 +1,10 @@
 #pragma once
 
+#define DEBUG
+
 #include <stdint.h>
 #include <string>
+#include <array>
 #include <vector>
 #include <math.h>
 #include <wrl.h>
@@ -47,6 +50,7 @@ union vec3 {
 	struct { f32 x, y, z; };
 	struct { f32 r, g, b; };
 
+	vec3() : x(0.0f), y(0.0f), z(0.0f) {};
 	vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {};
 
 	vec3 operator+(vec3 b) { vec3 result = { x + b.x, y + b.y, z + b.z }; return result; };
@@ -78,11 +82,34 @@ union vec4 {
 struct quat {
 	f32 x; f32 y; f32 z; f32 w;
 
+	quat() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {};
 	quat(f32 x, f32 y, f32 z, f32 w) : x(x), y(y), z(z), w() {};
 };
 
 struct mat4x4 {
 	f32 _11, _12, _13, _14, _21, _22, _23, _24, _31, _32, _33, _34, _41, _42, _43, _44;
+	union
+	{
+		struct
+		{
+			float        _11, _12, _13, _14;
+			float        _21, _22, _23, _24;
+			float        _31, _32, _33, _34;
+			float        _41, _42, _43, _44;
+		};
+
+		float _m[4][4] = { 0.0f, };
+	};
+
+	mat4x4() {};
+	mat4x4(f32 _11, f32 _12, f32 _13, f32 _14
+		, f32 _21, f32 _22, f32 _23, f32 _24
+		, f32 _31, f32 _32, f32 _33, f32 _34
+		, f32 _41, f32 _42, f32 _43, f32 _44)
+		:_11(_11), _12(_12), _13(_13), _14(_14)
+		, _21(_21), _22(_22), _23(_23), _24(_24)
+		, _31(_31), _32(_32), _33(_33), _34(_34)
+		, _41(_41), _42(_42), _43(_43), _44(_44) {};
 
 	mat4x4 operator+(mat4x4 b) {
 		mat4x4 result = {
@@ -130,7 +157,7 @@ struct mat4x4 {
 	}
 };
 
-f32 vec3_dot(const vec3 a, const vec3 b) {
+f32 vec3_dot(const vec3& a, const vec3& b) {
 	f32 result = a.x * b.x + a.y * b.y + a.z * b.z;
 
 	return result;
@@ -145,13 +172,13 @@ vec3 vec3_cross(const vec3 a, const vec3 b) {
 	return result;
 }
 
-f32 vec3_length(const vec3 a) {
+f32 vec3_length(const vec3& a) {
 	f32 length = sqrtf((a.x * a.x) + (a.y * a.y) + (a.z * a.z));
 
 	return length;
 }
 
-vec3 vec3_get_normal(const vec3 a) {
+vec3 vec3_get_normal(const vec3& a) {
 	f32 length = vec3_length(a);
 	vec3 normal = { a.x / length, a.y / length, a.z / length };
 
@@ -167,11 +194,155 @@ vec3 vec3_normalize(_Outptr_ vec3 *a) {
 	return *a;
 }
 
+vec3 vec3_euler_normalize(const vec3& euler)
+{
+	int x = (int)(euler.x / 360.0f);
+	int y = (int)(euler.y / 360.0f);
+	int z = (int)(euler.z / 360.0f);
+
+	return vec3(euler.x - x * 360.0f + (int)(euler.x < 0) * 360.0f,
+				euler.y - y * 360.0f + (int)(euler.y < 0) * 360.0f,
+				euler.z - z * 360.0f + (int)(euler.z < 0) * 360.0f);
+}
+
+vec3 vec3_euler_normalize(_Outptr_ vec3* euler)
+{
+	int x = (int)(euler->x / 360.0f);
+	int y = (int)(euler->y / 360.0f);
+	int z = (int)(euler->z / 360.0f);
+
+	euler->x = euler->x - x * 360.0f + (int)(euler->x < 0) * 360.0f;
+	euler->y = euler->y - y * 360.0f + (int)(euler->y < 0) * 360.0f;
+	euler->z = euler->z - z * 360.0f + (int)(euler->z < 0) * 360.0f;
+
+	return *euler;
+}
+
 vec3 vec3_transform_normal(const vec3 vec, const mat4x4 mat) {
 	vec3 result = {
 		mat._11 * vec.x + mat._12 * vec.y + mat._13 * vec.z
 		, mat._21 * vec.x + mat._22 * vec.y + mat._23 * vec.z
 		, mat._31 * vec.x + mat._32 * vec.y + mat._33 * vec.z};
+
+	return result;
+}
+
+//http://www.gamedev.net/topic/643623-how-do-i-get-the-euler-angle-from-a-matrix/
+vec3 vec3_rotation_from_matrix(const mat4x4& mat) {
+	vec3 dotx = vec3(mat._11, mat._12, mat._13);
+	vec3 doty = vec3(mat._21, mat._22, mat._23);
+	vec3 dotz = vec3(mat._31, mat._32, mat._33);
+
+
+	auto approximately = [](float a, float b) -> bool
+	{
+		return fabsf(a - b) < FLT_EPSILON;
+	};
+
+	float x = vec3_dot(dotx, dotx);
+	if (approximately(x, 1.0f) == false)
+	{
+		float invx = 1.0f / sqrtf(x);
+		dotx = dotx * invx;
+	}
+
+	float y = vec3_dot(doty, doty);
+	if (approximately(y, 1.0f) == false)
+	{
+		float invy = 1.0f / sqrtf(y);
+		doty = doty * invy;
+	}
+
+	float z = vec3_dot(dotz, dotz);
+	if (approximately(z, 1.0f) == false)
+	{
+		float invz = 1.0f / sqrtf(z);
+		dotz = dotz * invz;
+	}
+
+	float theta_x = 0;
+	float theta_y = 0;
+	float theta_z = 0;
+
+	if (dotz.y < 1.0f)
+	{
+		if (dotz.y > -1.0f)
+		{
+			theta_x = asinf(-dotz.y);
+			theta_y = atan2f(dotz.x, dotz.z);
+			theta_z = atan2f(dotx.y, doty.y);
+		}
+		else
+		{
+			theta_x = PI * 0.5f;
+			theta_y = -atan2f(-doty.x, dotx.x);
+			theta_z = 0;
+		}
+	}
+	else
+	{
+		theta_x = -PI * 0.5f;
+		theta_y = atan2f(-doty.x, dotx.x);
+		theta_z = 0;
+	}
+
+	return vec3_euler_normalize(vec3(theta_x, theta_y, theta_z));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+//Quaternion
+///////////////////////////////////////////////////////////////////////////////////////////////
+quat quat_rotation_from_matrix(const mat4x4& mat) {
+	quat result;
+
+	float s = 0.0f;
+
+	float trace = mat._m[0][0] + mat._m[1][1] + mat._m[2][2] + 1.0f;
+	if (trace > 1.0f)
+	{
+		s = 2.0f * sqrtf(trace);
+		result.x = (mat._m[1][2] - mat._m[2][1]) / s;
+		result.y = (mat._m[2][0] - mat._m[0][2]) / s;
+		result.z = (mat._m[0][1] - mat._m[1][0]) / s;
+		result.w = 0.25f * s;
+	}
+	else
+	{
+		int i, maxi = 0;
+
+		for (i = 1; i < 3; i++)
+		{
+			if (mat._m[i][i] > mat._m[maxi][maxi])
+				maxi = i;
+		}
+
+		switch (maxi)
+		{
+		case 0:
+			s = 2.0f * sqrtf(1.0f + mat._m[0][0] - mat._m[1][1] - mat._m[2][2]);
+			result.x = 0.25f * s;
+			result.y = (mat._m[0][1] + mat._m[1][0]) / s;
+			result.z = (mat._m[0][2] + mat._m[2][0]) / s;
+			result.w = (mat._m[1][2] - mat._m[2][1]) / s;
+			break;
+
+		case 1:
+			s = 2.0f * sqrtf(1.0f + mat._m[1][1] - mat._m[0][0] - mat._m[2][2]);
+			result.x = (mat._m[0][1] + mat._m[1][0]) / s;
+			result.y = 0.25f * s;
+			result.z = (mat._m[1][2] + mat._m[2][1]) / s;
+			result.w = (mat._m[2][0] - mat._m[0][2]) / s;
+			break;
+
+		case 2:
+			s = 2.0f * sqrtf(1.0f + mat._m[2][2] - mat._m[0][0] - mat._m[1][1]);
+			result.x = (mat._m[0][2] + mat._m[2][0]) / s;
+			result.y = (mat._m[1][2] + mat._m[2][1]) / s;
+			result.z = 0.25f * s;
+			result.w = (mat._m[0][1] - mat._m[1][0]) / s;
+			break;
+		}
+	}
 
 	return result;
 }
@@ -291,6 +462,13 @@ mat4x4 matrix_look_at_left_hand(const vec3 eye_position, const vec3 look_at, con
 	mat_eye._43 = -vec3_dot(axis_z, eye);
 
 	return mat_eye;
+}
+
+mat4x4 matrix_make_rotation(const vec3& right, const vec3& up, const vec3& forward) {
+	return mat4x4(	right.x,	right.y,	right.z,	0.0f
+				,	up.x,		up.y,		up.z,		0.0f
+				,	forward.x,	forward.y,	forward.z,	0.0f
+				,	0.0f,		0.0f,		0.0f,		0.0f);
 }
 
 #define safe_release(com) com->Release(); com = nullptr;

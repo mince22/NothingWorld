@@ -12,6 +12,8 @@ public:
 
 	void destroy();
 
+	ID3D11ShaderResourceView* get_diffuse_map_srv() const { return diffuse_map_srv; };
+
 private:
 	string name;
 

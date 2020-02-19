@@ -1,5 +1,5 @@
 #pragma once
-#include "platform.hpp"
+#include "Device/platform.hpp"
 #include "common.hpp"
 #include <stdio.h>
 

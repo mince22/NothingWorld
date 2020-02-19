@@ -8,6 +8,8 @@ public:
 	Model_Bone(Assimp_Bone& bone);
 	void destroy() {};
 
+	mat4x4 get_transform() const { return transform; };
+
 private:
 	string name;
 	int index;

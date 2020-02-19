@@ -345,7 +345,7 @@ void Assimp_Loader::write_mesh_data(wstring save_folder, wstring file_name)
 		writer->UInt(mesh->indices.size());
 		writer->Byte(&mesh->indices[0], sizeof(u32) * mesh->indices.size());
 
-		writer->UInt(mesh->mesh_parts.size());
+		/*writer->UInt(mesh->mesh_parts.size());
 		for (auto part : mesh->mesh_parts)
 		{
 			writer->String(part->name);
@@ -358,7 +358,7 @@ void Assimp_Loader::write_mesh_data(wstring save_folder, wstring file_name)
 			writer->UInt(part->index_count);
 
 			SAFE_DELETE(part);
-		}
+		}*/
 
 		SAFE_DELETE(mesh);
 	}

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Device">
-      <UniqueIdentifier>{e396b6f3-e752-46a0-9b52-46daaaaece54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Assimp">
       <UniqueIdentifier>{6fae4294-f043-4fa6-aedb-8c71f8b81e04}</UniqueIdentifier>
     </Filter>
@@ -28,18 +25,27 @@
     <Filter Include="소스 파일\Model">
       <UniqueIdentifier>{ec38e83f-f4de-4437-b25a-6cf1116a1de5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Device">
+      <UniqueIdentifier>{e396b6f3-e752-46a0-9b52-46daaaaece54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\System">
+      <UniqueIdentifier>{9ed41590-f4e7-427c-88a3-d980d413f14e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Execute">
+      <UniqueIdentifier>{0fd92c2a-cf21-4e02-afd4-4545f19c1860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component">
+      <UniqueIdentifier>{060dbcc0-4dc9-4b70-9596-4da9a4f7f77b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Interface">
+      <UniqueIdentifier>{14a83289-73f5-466a-903f-2ae525646a50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object">
+      <UniqueIdentifier>{74f45c96-fb2b-44da-90e4-d71cd39f6176}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code\graphics.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="code\main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="code\platform.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="code\input.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="code\Assimp\loader.cpp">
@@ -69,21 +75,39 @@
     <ClCompile Include="code\Model\model_material.cpp">
       <Filter>소스 파일\Model</Filter>
     </ClCompile>
-    <ClCompile Include="code\Device\d3d.cpp">
+    <ClCompile Include="code\Render\shader.cpp">
+      <Filter>소스 파일\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="code\System\input.cpp">
       <Filter>소스 파일\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="code\System\platform.cpp">
+      <Filter>소스 파일\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="code\System\launcher.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="code\System\d3d.cpp">
+      <Filter>소스 파일\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="code\System\program.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Execute\test_model.cpp">
+      <Filter>소스 파일\Execute</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Component\Transform.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Object\object.cpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Execute\test_object.cpp">
+      <Filter>소스 파일\Execute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\graphics.hpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="code\common.hpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="code\platform.hpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="code\input.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="code\debug.hpp">
@@ -122,8 +146,53 @@
     <ClInclude Include="code\Model\model_material.hpp">
       <Filter>소스 파일\Model</Filter>
     </ClInclude>
-    <ClInclude Include="code\Device\d3d.hpp">
+    <ClInclude Include="code\Render\shader.hpp">
+      <Filter>소스 파일\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Render\constant_buffer.hpp">
+      <Filter>소스 파일\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="code\vertex_layout.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Render\rasterizer_state.hpp">
+      <Filter>소스 파일\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Render\sampler_state.hpp">
+      <Filter>소스 파일\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="code\System\input.hpp">
       <Filter>소스 파일\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="code\System\platform.hpp">
+      <Filter>소스 파일\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="code\System\d3d.hpp">
+      <Filter>소스 파일\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="code\System\program.hpp">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Execute\test_model.h">
+      <Filter>소스 파일\Execute</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Component\Transform.hpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Interface\i_execute.hpp">
+      <Filter>소스 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Interface\i_component.hpp">
+      <Filter>소스 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Object\object.hpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Object\object_id.hpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Execute\test_object.hpp">
+      <Filter>소스 파일\Execute</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
