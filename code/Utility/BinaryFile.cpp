@@ -108,7 +108,7 @@ void BinaryWriter::Matrix(const mat4x4& data)
 
 void BinaryWriter::String(const string & data)
 {
-	UInt(data.size());
+	UInt((u32)data.size());
 
 	const char* str = data.c_str();
 	WriteFile(fileHandle, str, data.size(), &size, NULL);

@@ -9,7 +9,7 @@ enum class Component_Type
 	Max,
 };
 
-string component_type_name[u32(Component_Type::Max)] = { "Transform", "Model" };
+string component_type_name[u32(Component_Type::Max)] = { "Transform", "Model_Component" };
 
 class I_Component {
 public:
@@ -48,8 +48,8 @@ inline const Component_Type I_Component::deduce_component_type()
 	string type_name = typeid(T).name();
 	Component_Type type = Component_Type::Max;
 
-	if (type_name.find(component_type_name[u32(type)]) != string::npos) type = Component_Type::Transform;
-	else if (type_name.find(component_type_name[u32(type)]) != string::npos) type = Component_Type::ModelComponent;
+	if (type_name.find(component_type_name[u32(Component_Type::Transform)]) != string::npos) type = Component_Type::Transform;
+	else if (type_name.find(component_type_name[u32(Component_Type::ModelComponent)]) != string::npos) type = Component_Type::ModelComponent;
 
 	return type;
 }

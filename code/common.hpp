@@ -7,6 +7,7 @@
 #include <array>
 #include <vector>
 #include <math.h>
+#include <unordered_map>
 #include <wrl.h>
 
 typedef int8_t   s8;
@@ -20,7 +21,7 @@ typedef uint64_t u64;
 typedef float    f32;
 typedef double   f64;
 
-#define PI (3.14159265358979323846)
+#define PI (3.14159265359f)
 #define FORWARD { 0.0f, 0.0f, -1.0f }
 #define RIGHT { -1.0f, 0.0f, 0.0f }
 #define UP { 0.0f, 1.0f, 0.0f }
@@ -32,6 +33,12 @@ using namespace Microsoft::WRL;
 #define SAFE_DELETE_ARRAY(x)		{ if(x){ delete[] x; x = nullptr; } }
 #define SAFE_RELEASE(x)				{ if(x){ x->Release(); x = nullptr; } }
 #define SAFE_DESTROY_DELTE(x)		{ if(x){ x->Destroy(); delete x; x = nullptr; } }
+
+#define MODEL pair<string, Model *>
+#define MODEL_INSTANCE_MAX 64
+#define OBJECT_MAX 1024
+#define SHADER_PATH L"_asset/shader/"
+#define NO_PARENT_ID UINT32_MAX
 
 union vec2 {
 	struct { f32 x, y; };
@@ -88,7 +95,7 @@ struct quat {
 
 struct mat4x4 {
 	f32 _11, _12, _13, _14, _21, _22, _23, _24, _31, _32, _33, _34, _41, _42, _43, _44;
-	union
+	/*union
 	{
 		struct
 		{
@@ -99,7 +106,7 @@ struct mat4x4 {
 		};
 
 		float _m[4][4] = { 0.0f, };
-	};
+	};*/
 
 	mat4x4() {};
 	mat4x4(f32 _11, f32 _12, f32 _13, f32 _14
@@ -293,11 +300,11 @@ vec3 vec3_rotation_from_matrix(const mat4x4& mat) {
 //Quaternion
 ///////////////////////////////////////////////////////////////////////////////////////////////
 quat quat_rotation_from_matrix(const mat4x4& mat) {
-	quat result;
+	quat result = quat(0.0f, 0.0f, 0.0f, 0.0f);
 
 	float s = 0.0f;
 
-	float trace = mat._m[0][0] + mat._m[1][1] + mat._m[2][2] + 1.0f;
+	/*float trace = mat._m[0][0] + mat._m[1][1] + mat._m[2][2] + 1.0f;
 	if (trace > 1.0f)
 	{
 		s = 2.0f * sqrtf(trace);
@@ -342,7 +349,7 @@ quat quat_rotation_from_matrix(const mat4x4& mat) {
 			result.w = (mat._m[0][1] - mat._m[1][0]) / s;
 			break;
 		}
-	}
+	}*/
 
 	return result;
 }

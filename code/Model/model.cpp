@@ -6,6 +6,7 @@
 #include "../Utility/BinaryFile.h"
 #include "../Render/shader.hpp"
 
+
 Model::Model()
 {
 }
@@ -13,7 +14,7 @@ Model::Model()
 Model::Model(D3D * d3d)
 	: d3d(d3d)
 {
-	
+	shader = Render_System::shader_pool.find(shader_type_name[u32(Shader_Type::Model_Instance)])->second;
 }
 
 Model::Model(D3D * d3d, Shader * shader)
@@ -24,13 +25,15 @@ Model::Model(D3D * d3d, Shader * shader)
 
 void Model::load_model(wstring model_name)
 {
+	name = model_name;
+
 	wstring material_file = L"_model/" + model_name + L"/" + model_name + L".material";
 	read_material_file(material_file);
 
 	wstring mesh_file = L"_model/" + model_name + L"/" + model_name + L".mesh";
 	read_mesh_file(mesh_file);
 
-	buffer_count = meshes.size();
+	buffer_count = (u32)meshes.size();
 
 	create_vertex_buffer();
 	create_index_buffer();
@@ -38,8 +41,8 @@ void Model::load_model(wstring model_name)
 	if (shader == nullptr)
 	{
 		shader = new Shader(d3d->get_device(), d3d->get_context());
-		shader->create_shader(Shader_Type::VERTEX_SHADER, L"_asset/shader/model.hlsl", "vs_5_0");
-		shader->create_shader(Shader_Type::PIXEL_SHADER, L"_asset/shader/model.hlsl", "ps_5_0");
+		shader->create_shader(Shader_Profile::VERTEX_SHADER, L"_asset/shader/model.hlsl", "vs_5_0");
+		shader->create_shader(Shader_Profile::PIXEL_SHADER, L"_asset/shader/model.hlsl", "ps_5_0");
 	}
 }
 
@@ -54,11 +57,10 @@ void Model::destroy()
 	for (auto mesh : meshes)
 		SAFE_DELETE(mesh);
 
-	unordered_map<string, Model_Material*>::iterator iter;
-	for (iter = materials.begin(); iter != materials.end(); iter++)
+	for (auto material_vector : materials)
 	{
-		iter->second->destroy();
-		SAFE_DELETE(iter->second);
+		for (auto material : material_vector.second)
+			SAFE_DELETE(material);
 	}
 
 	if (shader != nullptr)
@@ -72,13 +74,32 @@ void Model::destroy()
 
 	for (auto buffer : index_buffers)
 		buffer->Release();
+
+	if (instance_buffer)
+		instance_buffer->Release();
 }
 
 void Model::render()
 {
-	shader->render();
+	{
+		mat4x4* instance_mat = Render_System::model_instance_pool.find(name)->second;
+		instance_mat[0]._41 = -75.0f;
+		instance_mat[0]._42 = 0.0f;
+		instance_mat[0]._43 = 0.0f;
+		instance_mat[1]._41 = 75.0f;
+		instance_mat[2]._41 = 0.0f;
 
-	ID3D11ShaderResourceView* diffuse_map_rtv = materials.begin()->second->get_diffuse_map_srv();
+		if (!instance_buffer)
+			create_instance_buffer(instance_mat);
+
+		/*if (!instance_buffer)
+			create_constant_buffer(d3d->get_device(), instance_mat, (u32)(sizeof(mat4x4) * MODEL_INSTANCE_MAX));*/
+		//else
+			//write_data_constant_buffer(d3d->get_context(), instance_buffer, instance_mat, (u32)(sizeof(mat4x4) * MODEL_INSTANCE_MAX));
+	}
+	
+
+	ID3D11ShaderResourceView* diffuse_map_rtv = materials.find(this->name)->second[0]->get_diffuse_map_srv();
 	d3d->get_context()->PSSetShaderResources(0, 1, &diffuse_map_rtv);
 
 	for (int ii = 0; ii < index_buffers.size(); ii++)
@@ -86,9 +107,13 @@ void Model::render()
 		u32 stride = sizeof(Vertex_Texture_Normal_Tangent_Blend);
 		u32 offset = 0;
 		d3d->get_context()->IASetVertexBuffers(0, 1, &vertex_buffers[ii], &stride, &offset);
+
+		stride = sizeof(mat4x4);
+		d3d->get_context()->IASetVertexBuffers(1, 1, &instance_buffer, &stride, &offset);
 		d3d->get_context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		d3d->get_context()->IASetIndexBuffer(index_buffers[ii], DXGI_FORMAT_R32_UINT, 0);
-		d3d->get_context()->DrawIndexed(meshes[ii]->indices.size(), 0, 0);
+		//d3d->get_context()->DrawIndexed((u32)meshes[ii]->indices.size(), 0, 0);
+		d3d->get_context()->DrawIndexedInstanced((u32)meshes[ii]->indices.size(), 3, 0, 0, 0);
 	}
 }
 
@@ -133,6 +158,7 @@ void Model::read_mesh_file(wstring file)
 
 void Model::read_material_file(wstring file)
 {
+	vector<Model_Material *> material_vector;
 	Xml::XMLDocument* document = new Xml::XMLDocument();
 
 	string tempFile = String::ToString(file);
@@ -214,20 +240,25 @@ void Model::read_material_file(wstring file)
 
 		matNode = matNode->NextSiblingElement();
 
-		Model_Material* material = new Model_Material(d3d->get_device(), assimp_material);
-		materials.insert(unordered_map<string, Model_Material *>::value_type(assimp_material.name, material));
+		//Model_Material* material = new Model_Material(d3d->get_device(), assimp_material);
+		//material_vector.emplace_back(d3d->get_device(), assimp_material);
+		material_vector.push_back(new Model_Material(d3d->get_device(), assimp_material));
 	} while (matNode != NULL);
+
+	materials.insert(unordered_map<wstring, vector<Model_Material *>>::value_type(this->name, material_vector));
+	//document->
+	SAFE_DELETE(document);
 }
 
 void Model::create_vertex_buffer()
 {
 	HRESULT hr;
-	for (int ii = 0; ii < buffer_count; ii++)
+	for (u32 ii = 0; ii < buffer_count; ii++)
 	{
 		// Fill in a buffer description.
 		D3D11_BUFFER_DESC buffer_description;
 		buffer_description.Usage = D3D11_USAGE_DEFAULT;
-		buffer_description.ByteWidth = sizeof(Vertex_Texture_Normal_Tangent_Blend) * meshes[ii]->vertices.size();
+		buffer_description.ByteWidth = (u32)(sizeof(Vertex_Texture_Normal_Tangent_Blend) * meshes[ii]->vertices.size());
 		buffer_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		buffer_description.CPUAccessFlags = 0;
 		buffer_description.MiscFlags = 0;
@@ -251,12 +282,12 @@ void Model::create_index_buffer()
 {
 	HRESULT hr;
 
-	for (int ii = 0; ii < buffer_count; ii++)
+	for (u32 ii = 0; ii < buffer_count; ii++)
 	{
 		// Fill in a buffer description.
 		D3D11_BUFFER_DESC buffer_description;
 		buffer_description.Usage = D3D11_USAGE_DEFAULT;
-		buffer_description.ByteWidth = sizeof(u32) * meshes[ii]->indices.size();
+		buffer_description.ByteWidth = (u32)(sizeof(u32) * meshes[ii]->indices.size());
 		buffer_description.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		buffer_description.CPUAccessFlags = 0;
 		buffer_description.MiscFlags = 0;
@@ -275,4 +306,32 @@ void Model::create_index_buffer()
 
 		assert(SUCCEEDED(hr));
 	}
+}
+
+void Model::create_instance_buffer(void* data)
+{
+	HRESULT hr;
+
+	// Fill in a buffer description.
+	D3D11_BUFFER_DESC buffer_description;
+	buffer_description.Usage = D3D11_USAGE_DEFAULT;
+	buffer_description.ByteWidth = (sizeof(mat4x4) * MODEL_INSTANCE_MAX);
+	//buffer_description.ByteWidth = (sizeof(float) * 19 * 3);
+	buffer_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buffer_description.CPUAccessFlags = 0;
+	buffer_description.MiscFlags = 0;
+	buffer_description.StructureByteStride = 0;
+
+	// Fill in the subresource data.
+	D3D11_SUBRESOURCE_DATA init_data;
+	init_data.pSysMem = data;
+	init_data.SysMemPitch = 0;
+	init_data.SysMemSlicePitch = 0;
+
+	//Create buffer with the device
+	ID3D11Buffer* buffer;
+	hr = d3d->get_device()->CreateBuffer(&buffer_description, &init_data, &buffer);
+	assert(SUCCEEDED(hr));
+
+	instance_buffer = buffer;
 }

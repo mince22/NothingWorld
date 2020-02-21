@@ -5,7 +5,8 @@
 
 #include "assimp/loader.cpp"
 
-#include "Component/Transform.cpp"
+#include "Component/transform.cpp"
+#include "Component/model_component.cpp"
 
 #include "Device/d3d.cpp"
 #include "Device/platform.cpp"
@@ -23,6 +24,7 @@
 #include "System/launcher.cpp"
 #include "System/program.cpp"
 
+#include "Render/render_system.cpp"
 #include "Render/shader.cpp"
 
 #include "Utility/BinaryFile.cpp"
@@ -31,6 +33,11 @@
 #include "Utility/Xml.cpp"
 #include "Utility/WICTextureLoader.cpp"
 
+#include <crtdbg.h>
+#if _DEBUG
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#define malloc(s) _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 #ifdef DEBUG
 #include "debug.hpp"
 #endif
@@ -135,6 +142,10 @@ int main(int, char**)
 //#ifdef DEBUG
 //	//report_live_objects();
 //#endif
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+	//_CrtSetBreakAlloc(2136);
 	Run("JoonPortfolio", 1280, 720, nullptr);
 
 	return 0;

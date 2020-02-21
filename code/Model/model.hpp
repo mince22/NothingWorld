@@ -3,8 +3,7 @@
 #include "../common.hpp"
 #include "../Device/d3d.hpp"
 #include "../assimp/assimp_type.hpp"
-
-#include <unordered_map>
+#include "../Render/shader.hpp"
 
 class Model {
 public:
@@ -26,20 +25,25 @@ private:
 
 	void create_vertex_buffer();
 	void create_index_buffer();
+	void create_instance_buffer(void* data);
 
 	void create_bone_buffer();
 private:
+	wstring name;
+
 	D3D* d3d;
 
-	class Shader* shader;
+	Shader* shader;
 
 	string material_file_name;
 
-	unordered_map<string, class Model_Material *> materials;
+	unordered_map<wstring, vector<class Model_Material *>> materials;
 	vector<class Model_Bone *> bones;
 	vector<Assimp_Mesh *> meshes;
 
 	u32 buffer_count;
 	vector<ID3D11Buffer *> vertex_buffers;
 	vector<ID3D11Buffer *> index_buffers;
+
+	ID3D11Buffer* instance_buffer = nullptr;
 };

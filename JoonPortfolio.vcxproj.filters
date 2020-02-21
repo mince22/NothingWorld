@@ -96,14 +96,20 @@
     <ClCompile Include="code\Execute\test_model.cpp">
       <Filter>소스 파일\Execute</Filter>
     </ClCompile>
-    <ClCompile Include="code\Component\Transform.cpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClCompile>
     <ClCompile Include="code\Object\object.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
     <ClCompile Include="code\Execute\test_object.cpp">
       <Filter>소스 파일\Execute</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Component\transform.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Component\model_component.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Render\render_system.cpp">
+      <Filter>소스 파일\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +182,6 @@
     <ClInclude Include="code\Execute\test_model.h">
       <Filter>소스 파일\Execute</Filter>
     </ClInclude>
-    <ClInclude Include="code\Component\Transform.hpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClInclude>
     <ClInclude Include="code\Interface\i_execute.hpp">
       <Filter>소스 파일\Interface</Filter>
     </ClInclude>
@@ -193,6 +196,15 @@
     </ClInclude>
     <ClInclude Include="code\Execute\test_object.hpp">
       <Filter>소스 파일\Execute</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Component\transform.hpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Component\model_component.hpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Render\render_system.hpp">
+      <Filter>소스 파일\Render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

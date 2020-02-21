@@ -2,26 +2,36 @@
 #include "object.hpp"
 #include "../Interface/i_execute.hpp"
 
-Object::Object()
+Object::Object(wstring name)
 {
 	create();
+	Execute::add_object_pool(this);
 }
 
 void Object::create()
 {
-	id = Execute::object_pool.size();
-	Execute::object_pool.push_back(this);
-	add_component<Transform>();
+	
 }
 
-const u32 Object::get_id() const
+void Object::destroy()
+{
+	for (auto component : components)
+		component.second->destroy();
+}
+
+void Object::add_object_pool()
+{
+}
+
+
+const Object_ID Object::get_id() const
 {
 	return id;
 }
 
 void Object::add_child(const Object & child) const
 {
-	u32 child_id = child.get_id();
+	Object_ID child_id = child.get_id();
 
 }
 

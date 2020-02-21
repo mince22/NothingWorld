@@ -131,7 +131,10 @@
     <ClCompile Include="code\Assimp\loader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="code\Component\Transform.cpp">
+    <ClCompile Include="code\Component\model_component.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\Component\transform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\Execute\test_model.cpp">
@@ -151,6 +154,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\Object\object.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="code\Render\render_system.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="code\Render\shader.cpp">
@@ -191,7 +197,8 @@
     <ClInclude Include="code\Assimp\assimp_type.hpp" />
     <ClInclude Include="code\Assimp\loader.hpp" />
     <ClInclude Include="code\common.hpp" />
-    <ClInclude Include="code\Component\Transform.hpp" />
+    <ClInclude Include="code\Component\model_component.hpp" />
+    <ClInclude Include="code\Component\transform.hpp" />
     <ClInclude Include="code\debug.hpp" />
     <ClInclude Include="code\Execute\test_model.h" />
     <ClInclude Include="code\Execute\test_object.hpp" />
@@ -205,6 +212,7 @@
     <ClInclude Include="code\Object\object_id.hpp" />
     <ClInclude Include="code\Render\constant_buffer.hpp" />
     <ClInclude Include="code\Render\rasterizer_state.hpp" />
+    <ClInclude Include="code\Render\render_system.hpp" />
     <ClInclude Include="code\Render\sampler_state.hpp" />
     <ClInclude Include="code\Render\shader.hpp" />
     <ClInclude Include="code\System\d3d.hpp" />

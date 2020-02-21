@@ -32,7 +32,7 @@ ID3D11Buffer* create_constant_buffer(ID3D11Device1 *device, void *data, u32 size
 	return constant_buffer;
 }
 
-void write_data_constant_buffer(ID3D11DeviceContext1 *context, ID3D11Buffer *buffer, mat4x4 *data) {
+void write_data_constant_buffer(ID3D11DeviceContext1 *context, ID3D11Buffer *buffer, void *data, u32 size) {
 	D3D11_MAPPED_SUBRESOURCE subResource;
 
 	HRESULT hr = context->Map
@@ -40,7 +40,7 @@ void write_data_constant_buffer(ID3D11DeviceContext1 *context, ID3D11Buffer *buf
 		buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource
 	);
 
-	memcpy(subResource.pData, data, sizeof(mat4x4));
+	memcpy(subResource.pData, data, size);
 
 	context->Unmap(buffer, 0);
 }
@@ -205,7 +205,7 @@ struct Eye_Buffer {
 			mat4x4 transpose_mat;
 			matrix_transpose(&transpose_mat, &mat_eye);
 
-			write_data_constant_buffer(context, buffer, &transpose_mat);
+			write_data_constant_buffer(context, buffer, &transpose_mat, (u32)sizeof(mat4x4));
 		}
 
 		if (prev_rotation.x != rotation.x || prev_rotation.y != rotation.y) {
@@ -214,7 +214,7 @@ struct Eye_Buffer {
 			mat4x4 transpose_mat;
 			matrix_transpose(&transpose_mat, &mat_eye);
 
-			write_data_constant_buffer(context, buffer, &transpose_mat);
+			write_data_constant_buffer(context, buffer, &transpose_mat, (u32)sizeof(mat4x4));
 		}
 	}
 };

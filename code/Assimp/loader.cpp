@@ -53,7 +53,7 @@ void Assimp_Loader::export_material(wstring save_folder, wstring save_file_name)
 
 void Assimp_Loader::read_material()
 {
-	for (int ii = 0; ii < scene->mNumMaterials; ii++)
+	for (u32 ii = 0; ii < scene->mNumMaterials; ii++)
 	{
 		aiMaterial* raw_material = scene->mMaterials[ii];
 
@@ -185,8 +185,8 @@ void Assimp_Loader::read_bone_data(aiNode * node, int index, int parent)
 
 	read_mesh_data(node, index);
 
-	for (int ii = 0; ii < node->mNumChildren; ii++)
-		read_bone_data(node->mChildren[ii], bones.size(), index);
+	for (u32 ii = 0; ii < node->mNumChildren; ii++)
+		read_bone_data(node->mChildren[ii], (s32)bones.size(), index);
 }
 
 void Assimp_Loader::make_bone_list(aiNode * node, int index, int parent)
@@ -198,8 +198,8 @@ void Assimp_Loader::make_bone_list(aiNode * node, int index, int parent)
 
 	bone_indices.push_back(bone);
 
-	for (int ii = 0; ii < node->mNumChildren; ii++)
-		make_bone_list(node->mChildren[ii], bone_indices.size(), index);
+	for (u32 ii = 0; ii < node->mNumChildren; ii++)
+		make_bone_list(node->mChildren[ii], (u32)bone_indices.size(), index);
 }
 
 void Assimp_Loader::make_bone_relation(aiNode * node, mat4x4 & local_transform)
@@ -230,7 +230,7 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 	mesh->name = node->mName.C_Str();
 	mesh->parent_bone = parent_bone;
 
-	for (int ii = 0; ii < node->mNumMeshes; ii++)
+	for (u32 ii = 0; ii < node->mNumMeshes; ii++)
 	{
 		u32 index = node->mMeshes[ii];
 		aiMesh* mesh_data = scene->mMeshes[index];
@@ -239,12 +239,12 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 		mesh_part->name = mesh_data->mName.C_Str();
 		mesh_part->material_name = scene->mMaterials[mesh_data->mMaterialIndex]->GetName().C_Str();
 
-		mesh_part->start_vertex = mesh->vertices.size();
+		mesh_part->start_vertex = (u32)mesh->vertices.size();
 		mesh_part->vertex_count = mesh_data->mNumVertices;
-		mesh_part->start_index = mesh->indices.size();
+		mesh_part->start_index = (u32)mesh->indices.size();
 		mesh_part->index_count = mesh_data->mNumFaces * mesh_data->mFaces->mNumIndices;
 
-		for (int ii = 0; ii < mesh_data->mNumVertices; ii++)
+		for (u32 ii = 0; ii < mesh_data->mNumVertices; ii++)
 		{
 			Vertex_Texture_Normal_Tangent_Blend vertex;
 			memcpy(&vertex.position, &mesh_data->mVertices[ii], sizeof(vec3));
@@ -262,11 +262,11 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 		}//end mNumVertices
 
 		//mNumFaces is the number of primitives.
-		for (int ii = 0; ii < mesh_data->mNumFaces; ii++)
+		for (u32 ii = 0; ii < mesh_data->mNumFaces; ii++)
 		{
 			aiFace& face = mesh_data->mFaces[ii];
 
-			for (int ii = 0; ii < face.mNumIndices; ii++)
+			for (u32 ii = 0; ii < face.mNumIndices; ii++)
 			{
 				mesh->indices.push_back(face.mIndices[ii]);
 				//Each index should plus start vertex. 
@@ -274,10 +274,10 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 			}
 		}//end mNumFaces
 
-		for (int ii = 0; ii < mesh_data->mNumBones; ii++)
+		for (u32 ii = 0; ii < mesh_data->mNumBones; ii++)
 		{
 			const aiBone* bone_data = mesh_data->mBones[ii];
-			for (int jj = 0; jj < bone_data->mNumWeights; jj++)
+			for (u32 jj = 0; jj < bone_data->mNumWeights; jj++)
 			{
 				u32 vertex_id = bone_data->mWeights[jj].mVertexId;
 				for (int weight_id = 0; weight_id < 4; weight_id++)
@@ -302,7 +302,7 @@ void Assimp_Loader::read_mesh_data(aiNode * node, int parent_bone)
 						}
 
 						mesh->vertices[vertex_id].blend_weights[weight_id] = bone_data->mWeights[jj].mWeight;
-						mesh->vertices[vertex_id].blend_indices[weight_id] = bone_id;
+						mesh->vertices[vertex_id].blend_indices[weight_id] = (float)bone_id;
 						break;
 					}
 				}//end 4(wieght_id)
@@ -322,7 +322,7 @@ void Assimp_Loader::write_mesh_data(wstring save_folder, wstring file_name)
 	BinaryWriter* writer = new BinaryWriter();
 	writer->Open(save_folder + file_name);
 	
-	writer->UInt(bones.size());
+	writer->UInt((u32)bones.size());
 	for (auto bone : bones)
 	{
 		writer->Int(bone->index);
@@ -333,17 +333,17 @@ void Assimp_Loader::write_mesh_data(wstring save_folder, wstring file_name)
 		SAFE_DELETE(bone);
 	}
 
-	writer->UInt(meshes.size());
+	writer->UInt((u32)meshes.size());
 	for (auto mesh : meshes)
 	{
 		writer->String(mesh->name);
 		writer->Int(mesh->parent_bone);
 		
-		writer->UInt(mesh->vertices.size());
-		writer->Byte(&mesh->vertices[0], sizeof(Vertex_Texture_Normal_Tangent_Blend) * mesh->vertices.size());
+		writer->UInt((u32)mesh->vertices.size());
+		writer->Byte(&mesh->vertices[0], (u32)sizeof(Vertex_Texture_Normal_Tangent_Blend) * (u32)mesh->vertices.size());
 
-		writer->UInt(mesh->indices.size());
-		writer->Byte(&mesh->indices[0], sizeof(u32) * mesh->indices.size());
+		writer->UInt((u32)mesh->indices.size());
+		writer->Byte(&mesh->indices[0], (u32)sizeof(u32) * (u32)mesh->indices.size());
 
 		/*writer->UInt(mesh->mesh_parts.size());
 		for (auto part : mesh->mesh_parts)
